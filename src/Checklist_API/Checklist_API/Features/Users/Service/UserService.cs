@@ -59,7 +59,7 @@ public class UserService : IUserService
         {
             _logger.LogDebug("User already exist: {Email}", dto.Email);
 
-            throw new UserAlreadyExistsException("user already exists");
+            throw new UserAlreadyExistsException();
         }       
 
         var user = _userRegistrationMapper.MapToEntity(dto);

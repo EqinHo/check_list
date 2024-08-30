@@ -4,8 +4,8 @@ public static class CustomExceptions
 {
     public class UserAlreadyExistsException : Exception
     {
-        public UserAlreadyExistsException(string email)
-            : base($"User already exists with email: {email}")
+        public UserAlreadyExistsException()
+            : base($"User already exists")
         {
         }
     }
