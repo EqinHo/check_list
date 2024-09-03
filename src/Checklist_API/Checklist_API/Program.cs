@@ -27,6 +27,7 @@ builder.Services.AddDbContext<CheckListDbContext>(options =>
     );
 
 builder.Services.AddScoped<GlobalExceptionMiddleware>();
+builder.Services.AddSingleton<ExceptionHandler>();
 
 builder.Host.UseSerilog((context, configuration) =>
 {
