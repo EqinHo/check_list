@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Checklist_API.Data.Migrations
+namespace Checklist_API.Data.migrations
 {
     [DbContext(typeof(CheckListDbContext))]
     partial class CheckListDbContextModelSnapshot : ModelSnapshot
@@ -104,16 +104,16 @@ namespace Checklist_API.Data.Migrations
                     b.Property<int>("JwtRoleId")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("DateUpdated")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("JwtRoleId");
+                    b.HasKey("JwtRoleId", "UserId");
 
                     b.HasIndex("UserId");
 

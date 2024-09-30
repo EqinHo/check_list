@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Checklist_API.Data.Migrations
+namespace Checklist_API.Data.migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -102,7 +102,7 @@ namespace Checklist_API.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_JWTUserRole", x => x.JwtRoleId);
+                    table.PrimaryKey("PK_JWTUserRole", x => new { x.JwtRoleId, x.UserId });
                     table.ForeignKey(
                         name: "FK_JWTUserRole_JWTRole_JwtRoleId",
                         column: x => x.JwtRoleId,

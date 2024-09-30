@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Checklist_API.Data.Migrations
+namespace Checklist_API.Data.migrations
 {
     [DbContext(typeof(CheckListDbContext))]
-    [Migration("20240925115008_Initial")]
+    [Migration("20240930080351_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -107,16 +107,16 @@ namespace Checklist_API.Data.Migrations
                     b.Property<int>("JwtRoleId")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("DateUpdated")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("JwtRoleId");
+                    b.HasKey("JwtRoleId", "UserId");
 
                     b.HasIndex("UserId");
 
