@@ -20,7 +20,11 @@ public class UserController : ControllerBase
         _logger = logger;
     }
 
+<<<<<<< HEAD
+    [Authorize(Roles = "Admin")]
+=======
     [Authorize(Roles = "User")]
+>>>>>>> 7dc864fa4bae6c37c62f623b39c9d8b749d98245
     // GET https://localhost:7070/api/v1/users?page=1&pageSize=10
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UserDTO>>> GetAll(int page = 1, int pageSize = 10)
