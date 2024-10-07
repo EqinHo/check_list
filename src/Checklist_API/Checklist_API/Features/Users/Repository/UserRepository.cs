@@ -55,14 +55,13 @@ public class UserRepository : IUserRepository
 
         JWTUserRole roleAssignment = new()
         {
-            JwtRoleId = 1,
+            RoleName = "User",
             UserId = user.Id,            
             DateCreated = DateTime.Now,
             DateUpdated = DateTime.Now
-        }; // kjør jævla db migration pga endret mye.. // husk hellocontroller........
+        }; 
 
         await _dbContext.JWTUserRole.AddAsync(roleAssignment);
-
         await _dbContext.SaveChangesAsync();
 
         return res.Entity;

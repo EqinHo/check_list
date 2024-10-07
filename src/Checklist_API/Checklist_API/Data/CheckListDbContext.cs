@@ -9,7 +9,6 @@ public class CheckListDbContext : DbContext
 {
     public CheckListDbContext(DbContextOptions options) : base(options)
     {
-
     }
 
     public DbSet<CheckList> CheckList { get; set; }
@@ -28,11 +27,15 @@ public class CheckListDbContext : DbContext
         //modelBuilder.Entity<JWTUserRole>().ToTable("jwtuserrole");
 
         base.OnModelCreating(modelBuilder);
-        base.OnModelCreating(modelBuilder);
+
+        // seed roles into JWTRole table
+        modelBuilder.Entity<JWTRole>().HasData(
+        new JWTRole { RoleName = "Admin" },
+        new JWTRole { RoleName = "User" });
 
         #region CheckList
 
-        modelBuilder.Entity<CheckList>()  // Strongly typed id deklarert
+      modelBuilder.Entity<CheckList>()  // Strongly typed id deklarert
             .Property(x => x.Id)
             .HasConversion(
                 id => id.checklistId,
@@ -53,6 +56,10 @@ public class CheckListDbContext : DbContext
             .HasOne(c => c.User)
             .WithMany(u => u.Checklists)
             .HasForeignKey(c => c.UserId);
+
+        modelBuilder.Entity<CheckList>()
+           .Property(x => x.Id)
+           .IsRequired();
 
         modelBuilder.Entity<CheckList>() 
             .Property(x => x.Title)
@@ -115,7 +122,6 @@ public class CheckListDbContext : DbContext
         modelBuilder.Entity<User>()
           .HasKey(x => x.Id);
 
-
         modelBuilder.Entity<User>()
            .HasMany(u => u.Checklists)
            .WithOne(c => c.User)
@@ -127,9 +133,13 @@ public class CheckListDbContext : DbContext
            .HasForeignKey(ur => ur.UserId);
 
         modelBuilder.Entity<User>()
-            .Property(x => x.FirstName)
-            .HasMaxLength(100)
-            .IsRequired();
+          .Property(x => x.Id)
+          .IsRequired();
+
+        modelBuilder.Entity<User>()
+          .Property(x => x.FirstName)
+          .HasMaxLength(100)
+          .IsRequired();
 
         modelBuilder.Entity<User>()
             .Property(x => x.LastName)
@@ -167,12 +177,16 @@ public class CheckListDbContext : DbContext
         #region JWTRole       
 
         modelBuilder.Entity<JWTRole>()
-            .HasKey(x => x.Id);
+            .HasKey(x => x.RoleName);      
 
         modelBuilder.Entity<JWTRole>()
             .HasMany(x => x.JWTUserRoles)
             .WithOne(x => x.JWTRole)
-            .HasForeignKey(j => j.JwtRoleId);
+            .HasForeignKey(j => j.RoleName);
+
+        modelBuilder.Entity<JWTRole>()
+           .Property(x => x.RoleName)
+           .IsRequired();
 
         modelBuilder.Entity<JWTRole>()
             .Property(x => x.RoleName)
@@ -181,7 +195,7 @@ public class CheckListDbContext : DbContext
 
         #endregion
 
-        #region JWTUserRole      
+        #region JWTUserRole       
 
         modelBuilder.Entity<JWTUserRole>()
          .Property(x => x.UserId)
@@ -191,12 +205,12 @@ public class CheckListDbContext : DbContext
          );
 
         modelBuilder.Entity<JWTUserRole>()
-         .HasKey(ur => new { ur.JwtRoleId, ur.UserId }); // Composite key
+         .HasKey(ur => new { ur.RoleName, ur.UserId }); // Composite key
 
         modelBuilder.Entity<JWTUserRole>()
          .HasOne(j => j.JWTRole)
          .WithMany(j => j.JWTUserRoles)
-         .HasForeignKey(j => j.JwtRoleId);
+         .HasForeignKey(j => j.RoleName);
 
         modelBuilder.Entity<JWTUserRole>()
          .HasOne(u => u.User)

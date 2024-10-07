@@ -6,7 +6,7 @@ namespace Checklist_API.Features.JWT.Entity;
 
 public class JWTUserRole
 {
-    public int JwtRoleId { get; set; }
+    public string RoleName { get; set; } = string.Empty;
     public UserId UserId { get; set; }   
     public DateTime DateCreated { get; init; }
     public DateTime DateUpdated { get; set; }
