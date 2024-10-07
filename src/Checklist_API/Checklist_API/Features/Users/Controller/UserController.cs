@@ -1,5 +1,6 @@
 ﻿using Checklist_API.Features.Users.DTOs;
 using Checklist_API.Features.Users.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -19,6 +20,7 @@ public class UserController : ControllerBase
         _logger = logger;
     }
 
+    [Authorize(Roles = "Admin")]
     // GET https://localhost:7070/api/v1/users?page=1&pageSize=10
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UserDTO>>> GetAll(int page = 1, int pageSize = 10)
