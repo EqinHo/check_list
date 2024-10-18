@@ -8,6 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\Login\Mappers\**" />
+    <Content Remove="Features\Login\Mappers\**" />
+    <EmbeddedResource Remove="Features\Login\Mappers\**" />
+    <None Remove="Features\Login\Mappers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Docker\MySQL\CheckList_Rename_Tables.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.8" />
@@ -36,9 +47,6 @@
     <Folder Include="Docker\Nginx\" />
     <Folder Include="Features\CheckList\Mappers\" />
     <Folder Include="Features\CheckList\DTOs\" />
-    <Folder Include="Features\Login\Mappers\" />
-    <Folder Include="Features\Login\Service\" />
-    <Folder Include="Features\Login\Repository\" />
   </ItemGroup>
 
 </Project>
