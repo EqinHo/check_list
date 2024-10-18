@@ -1,6 +1,7 @@
 using Check_List_API.Data;
 using Checklist_API.Extensions;
 using Checklist_API.Features.JWT.Features;
+using Checklist_API.Features.JWT.Features.Interfaces;
 using Checklist_API.Features.Users.Repository;
 using Checklist_API.Features.Users.Repository.Interfaces;
 using Checklist_API.Features.Users.Service;
@@ -42,6 +43,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddAuthorization();
+
 builder.Services.AddDbContext<CheckListDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
     new MySqlServerVersion(new Version(8, 0)))
@@ -49,8 +52,8 @@ builder.Services.AddDbContext<CheckListDbContext>(options =>
 
 builder.Services.AddScoped<GlobalExceptionMiddleware>(); // samle senere: public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration)
 builder.Services.AddSingleton<ExceptionHandler>();
-builder.Services.AddScoped<AuthenticationService>();
-builder.Services.AddScoped<TokenGenerator>();
+builder.Services.AddScoped<IUserAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
 
 builder.Host.UseSerilog((context, configuration) =>
 {
@@ -72,6 +75,7 @@ app.UseHttpsRedirection();
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

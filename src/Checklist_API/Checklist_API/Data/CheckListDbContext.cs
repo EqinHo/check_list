@@ -20,11 +20,10 @@ public class CheckListDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Mulig fix for capital letter issue tables when using docker:
-
-        //modelBuilder.Entity<CheckList>().ToTable("checklist");
-        //modelBuilder.Entity<User>().ToTable("user");
-        //modelBuilder.Entity<JWTRole>().ToTable("jwtrole");
-        //modelBuilder.Entity<JWTUserRole>().ToTable("jwtuserrole");
+        //modelBuilder.Entity<CheckList>().ToTable("Checklist");
+        //modelBuilder.Entity<User>().ToTable("User");
+        //modelBuilder.Entity<JWTRole>().ToTable("Jwtrole");
+        //modelBuilder.Entity<JWTUserRole>().ToTable("Jwtuserrole");
 
         base.OnModelCreating(modelBuilder);
 

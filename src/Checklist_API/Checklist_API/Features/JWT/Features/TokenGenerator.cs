@@ -1,4 +1,5 @@
 ﻿using Check_List_API.Data;
+using Checklist_API.Features.JWT.Features.Interfaces;
 using Checklist_API.Features.Users.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace Checklist_API.Features.JWT.Features;
 
-public class TokenGenerator(IConfiguration config, CheckListDbContext dbContext, ILogger<TokenGenerator> logger)
+public class TokenGenerator(IConfiguration config, CheckListDbContext dbContext, ILogger<TokenGenerator> logger) : ITokenGenerator
 {
     private readonly IConfiguration _config = config; // trengs for tilgang til appsettings pga JWT secretkey etc ligger der
     private readonly CheckListDbContext _dbContext = dbContext;

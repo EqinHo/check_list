@@ -49,6 +49,7 @@ public class UserController : ControllerBase
     [HttpPut("{id}")]
     public void Put(int id, [FromBody] string value)
     {
+        // var userId = User.FindFirst("UserId")?.Value // bruker for å sjekke at en bruker kun kan endre sin egen checklist
     }
 
     // DELETE api/<UserController>/5
