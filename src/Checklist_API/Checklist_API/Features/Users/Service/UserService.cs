@@ -27,7 +27,7 @@ public class UserService : IUserService
 
     public async Task<IEnumerable<UserDTO>> GetAllAsync(int page, int pageSize)
     {
-        _logger.LogInformation("getting all users");
+        _logger.LogInformation("Retrieving all users");
 
         var res = await _userRepository.GetAllAsync(page, pageSize);
 

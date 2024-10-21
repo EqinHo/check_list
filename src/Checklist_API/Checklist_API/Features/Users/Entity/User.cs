@@ -32,5 +32,5 @@ public class User
     public DateTime DateUpdated { get; set; }
 
     public virtual ICollection<CheckList> Checklists { get; set; } = new List<CheckList>();
-    public virtual ICollection<JWTUserRole> JWTUserRoles { get; set; } = new List<JWTUserRole>();
+    public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 }

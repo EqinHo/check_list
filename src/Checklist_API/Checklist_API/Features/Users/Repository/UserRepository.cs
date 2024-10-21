@@ -1,5 +1,6 @@
 ﻿using Check_List_API.Data;
 using Checklist_API.Features.JWT.Entity;
+using Checklist_API.Features.Login.DTOs;
 using Checklist_API.Features.Users.Entity;
 using Checklist_API.Features.Users.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,7 @@ public class UserRepository : IUserRepository
 
     public async Task<IEnumerable<User>> GetAllAsync(int page, int pageSize)
     {
-        _logger.LogDebug("Getting users from db");
+        _logger.LogDebug("Retrieving users from db");
 
         int itemToSkip = (page - 1) * pageSize;
 
@@ -53,7 +54,7 @@ public class UserRepository : IUserRepository
 
         var res = await _dbContext.User.AddAsync(user);
 
-        JWTUserRole roleAssignment = new()
+        UserRole roleAssignment = new()
         {
             RoleName = "User",
             UserId = user.Id,            
@@ -61,7 +62,7 @@ public class UserRepository : IUserRepository
             DateUpdated = DateTime.Now
         }; 
 
-        await _dbContext.JWTUserRole.AddAsync(roleAssignment);
+        await _dbContext.UserRole.AddAsync(roleAssignment);
         await _dbContext.SaveChangesAsync();
 
         return res.Entity;
@@ -69,9 +70,10 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetByEmailAsync(string email)
     {
-        _logger.LogDebug("Getting user by email: {email} from db", email);
+        _logger.LogDebug("Retrieving user by email: {email} from db", email);
 
         var res = await _dbContext.User.FirstOrDefaultAsync(x => x.Email.Equals(email));
         return res;
     }
+
 }

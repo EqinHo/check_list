@@ -1,5 +1,6 @@
 ﻿using Check_List_API.Data;
 using Checklist_API.Features.JWT.Features.Interfaces;
+using Checklist_API.Features.JWT.Interfaces;
 using Checklist_API.Features.Users.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -9,10 +10,10 @@ using System.Text;
 
 namespace Checklist_API.Features.JWT.Features;
 
-public class TokenGenerator(IConfiguration config, CheckListDbContext dbContext, ILogger<TokenGenerator> logger) : ITokenGenerator
+public class TokenGenerator(IConfiguration config, IUserRoleRepository userRoleRepository, ILogger<TokenGenerator> logger) : ITokenGenerator
 {
     private readonly IConfiguration _config = config; // trengs for tilgang til appsettings pga JWT secretkey etc ligger der
-    private readonly CheckListDbContext _dbContext = dbContext;
+    private readonly IUserRoleRepository _userRoleRepository = userRoleRepository;
     private readonly ILogger<TokenGenerator> _logger = logger;
 
     public async Task<string> GenerateJSONWebTokenAsync(User user)
@@ -23,7 +24,7 @@ public class TokenGenerator(IConfiguration config, CheckListDbContext dbContext,
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         List<Claim> claims = [];
-        var userRoles = await _dbContext.JWTUserRole.Where(ur => ur.UserId == user.Id).ToListAsync();
+        var userRoles = await _userRoleRepository.GetUserRolesAsync(user.Id);
 
         claims.Add(new Claim("UserId", user.Id.ToString()));
         claims.Add(new Claim("UserName", user.Email.ToString()));

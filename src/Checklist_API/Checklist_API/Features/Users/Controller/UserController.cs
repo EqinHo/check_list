@@ -25,7 +25,7 @@ public class UserController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UserDTO>>> GetAll(int page = 1, int pageSize = 10)
     {
-        _logger.LogInformation("Getting all Users");
+        _logger.LogInformation("Retrieving all Users");
 
         if (page < 1 || pageSize < 1 || pageSize > 50)
         {
