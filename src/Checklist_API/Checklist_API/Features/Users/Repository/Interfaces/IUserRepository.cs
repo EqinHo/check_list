@@ -1,6 +1,7 @@
 ﻿
 
 
+using Checklist_API.Features.Login.DTOs;
 using Checklist_API.Features.Users.Entity;
 
 namespace Checklist_API.Features.Users.Repository.Interfaces;
@@ -13,4 +14,5 @@ public interface IUserRepository
     Task<User?> UpdateAsync(UserId id, User user);
     Task<User?> DeleteAsync(UserId id);
     Task<User?> RegisterAsync(User user);
+
 }

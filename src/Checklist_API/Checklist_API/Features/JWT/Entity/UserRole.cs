@@ -4,7 +4,7 @@ using Checklist_API.Features.Users.Entity;
 
 namespace Checklist_API.Features.JWT.Entity;
 
-public class JWTUserRole
+public class UserRole
 {
     public string RoleName { get; set; } = string.Empty;
     public UserId UserId { get; set; }   
@@ -13,5 +13,5 @@ public class JWTUserRole
 
 
     public virtual User? User { get; set; }
-    public virtual JWTRole? JWTRole { get; set; }
+    public virtual Role? Role { get; set; }
 }

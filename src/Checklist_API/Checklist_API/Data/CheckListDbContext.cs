@@ -13,8 +13,8 @@ public class CheckListDbContext : DbContext
 
     public DbSet<CheckList> CheckList { get; set; }
     public DbSet<User> User { get; set; }
-    public DbSet<JWTRole> JWTRole { get; set; }
-    public DbSet<JWTUserRole> JWTUserRole { get; set; }
+    public DbSet<Role> Role { get; set; }
+    public DbSet<UserRole> UserRole { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -28,9 +28,9 @@ public class CheckListDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         // seed roles into JWTRole table
-        modelBuilder.Entity<JWTRole>().HasData(
-        new JWTRole { RoleName = "Admin" },
-        new JWTRole { RoleName = "User" });
+        modelBuilder.Entity<Role>().HasData(
+        new Role { RoleName = "Admin" },
+        new Role { RoleName = "User" });
 
         #region CheckList
 
@@ -127,7 +127,7 @@ public class CheckListDbContext : DbContext
            .HasForeignKey(c => c.UserId);
 
         modelBuilder.Entity<User>()
-           .HasMany(u => u.JWTUserRoles)
+           .HasMany(u => u.UserRoles)
            .WithOne(ur => ur.User)
            .HasForeignKey(ur => ur.UserId);
 
@@ -173,54 +173,54 @@ public class CheckListDbContext : DbContext
 
         #endregion
 
-        #region JWTRole       
+        #region Role       
 
-        modelBuilder.Entity<JWTRole>()
+        modelBuilder.Entity<Role>()
             .HasKey(x => x.RoleName);      
 
-        modelBuilder.Entity<JWTRole>()
-            .HasMany(x => x.JWTUserRoles)
-            .WithOne(x => x.JWTRole)
+        modelBuilder.Entity<Role>()
+            .HasMany(x => x.UserRoles)
+            .WithOne(x => x.Role)
             .HasForeignKey(j => j.RoleName);
 
-        modelBuilder.Entity<JWTRole>()
+        modelBuilder.Entity<Role>()
            .Property(x => x.RoleName)
            .IsRequired();
 
-        modelBuilder.Entity<JWTRole>()
+        modelBuilder.Entity<Role>()
             .Property(x => x.RoleName)
             .HasMaxLength(20)
             .IsRequired();
 
         #endregion
 
-        #region JWTUserRole       
+        #region UserRole       
 
-        modelBuilder.Entity<JWTUserRole>()
+        modelBuilder.Entity<UserRole>()
          .Property(x => x.UserId)
          .HasConversion(
                id => id.userId,
                value => new UserId(value)
          );
 
-        modelBuilder.Entity<JWTUserRole>()
+        modelBuilder.Entity<UserRole>()
          .HasKey(ur => new { ur.RoleName, ur.UserId }); // Composite key
 
-        modelBuilder.Entity<JWTUserRole>()
-         .HasOne(j => j.JWTRole)
-         .WithMany(j => j.JWTUserRoles)
+        modelBuilder.Entity<UserRole>()
+         .HasOne(j => j.Role)
+         .WithMany(j => j.UserRoles)
          .HasForeignKey(j => j.RoleName);
 
-        modelBuilder.Entity<JWTUserRole>()
+        modelBuilder.Entity<UserRole>()
          .HasOne(u => u.User)
-         .WithMany(j => j.JWTUserRoles)
+         .WithMany(j => j.UserRoles)
          .HasForeignKey(u => u.UserId);
 
-        modelBuilder.Entity<JWTUserRole>()
+        modelBuilder.Entity<UserRole>()
          .Property(x => x.DateCreated)
          .IsRequired();
 
-        modelBuilder.Entity<JWTUserRole>()
+        modelBuilder.Entity<UserRole>()
          .Property(x => x.DateUpdated)
          .IsRequired();
         #endregion

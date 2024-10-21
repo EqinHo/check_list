@@ -2,6 +2,8 @@ using Check_List_API.Data;
 using Checklist_API.Extensions;
 using Checklist_API.Features.JWT.Features;
 using Checklist_API.Features.JWT.Features.Interfaces;
+using Checklist_API.Features.JWT.Interfaces;
+using Checklist_API.Features.JWT.Repository;
 using Checklist_API.Features.Users.Repository;
 using Checklist_API.Features.Users.Repository.Interfaces;
 using Checklist_API.Features.Users.Service;
@@ -53,6 +55,7 @@ builder.Services.AddDbContext<CheckListDbContext>(options =>
 builder.Services.AddScoped<GlobalExceptionMiddleware>(); // samle senere: public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration)
 builder.Services.AddSingleton<ExceptionHandler>();
 builder.Services.AddScoped<IUserAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
 
 builder.Host.UseSerilog((context, configuration) =>

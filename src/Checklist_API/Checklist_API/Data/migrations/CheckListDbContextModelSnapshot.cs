@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Checklist_API.data.migrations
+namespace Checklist_API.Data.migrations
 {
     [DbContext(typeof(CheckListDbContext))]
     partial class CheckListDbContextModelSnapshot : ModelSnapshot
@@ -81,7 +81,7 @@ namespace Checklist_API.data.migrations
                     b.ToTable("CheckList");
                 });
 
-            modelBuilder.Entity("Checklist_API.Features.JWT.Entity.JWTRole", b =>
+            modelBuilder.Entity("Checklist_API.Features.JWT.Entity.Role", b =>
                 {
                     b.Property<string>("RoleName")
                         .HasMaxLength(20)
@@ -89,7 +89,7 @@ namespace Checklist_API.data.migrations
 
                     b.HasKey("RoleName");
 
-                    b.ToTable("JWTRole");
+                    b.ToTable("Role");
 
                     b.HasData(
                         new
@@ -102,7 +102,7 @@ namespace Checklist_API.data.migrations
                         });
                 });
 
-            modelBuilder.Entity("Checklist_API.Features.JWT.Entity.JWTUserRole", b =>
+            modelBuilder.Entity("Checklist_API.Features.JWT.Entity.UserRole", b =>
                 {
                     b.Property<string>("RoleName")
                         .HasColumnType("varchar(20)");
@@ -120,7 +120,7 @@ namespace Checklist_API.data.migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("JWTUserRole");
+                    b.ToTable("UserRole");
                 });
 
             modelBuilder.Entity("Checklist_API.Features.Users.Entity.User", b =>
@@ -178,35 +178,35 @@ namespace Checklist_API.data.migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Checklist_API.Features.JWT.Entity.JWTUserRole", b =>
+            modelBuilder.Entity("Checklist_API.Features.JWT.Entity.UserRole", b =>
                 {
-                    b.HasOne("Checklist_API.Features.JWT.Entity.JWTRole", "JWTRole")
-                        .WithMany("JWTUserRoles")
+                    b.HasOne("Checklist_API.Features.JWT.Entity.Role", "Role")
+                        .WithMany("UserRoles")
                         .HasForeignKey("RoleName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Checklist_API.Features.Users.Entity.User", "User")
-                        .WithMany("JWTUserRoles")
+                        .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("JWTRole");
+                    b.Navigation("Role");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Checklist_API.Features.JWT.Entity.JWTRole", b =>
+            modelBuilder.Entity("Checklist_API.Features.JWT.Entity.Role", b =>
                 {
-                    b.Navigation("JWTUserRoles");
+                    b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("Checklist_API.Features.Users.Entity.User", b =>
                 {
                     b.Navigation("Checklists");
 
-                    b.Navigation("JWTUserRoles");
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }
