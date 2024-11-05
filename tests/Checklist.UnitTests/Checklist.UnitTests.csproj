@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="JWTTests\" />
+    <Folder Include="ServiceTests\" />
   </ItemGroup>	
 
 </Project>

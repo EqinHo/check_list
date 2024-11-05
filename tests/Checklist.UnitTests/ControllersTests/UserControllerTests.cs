@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace Checklist.UnitTests.Controllers;
+namespace Checklist.UnitTests.ControllersTests;
 public class UserControllerTests
 {
     private readonly UserController _userController;
