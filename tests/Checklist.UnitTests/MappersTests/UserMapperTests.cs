@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Checklist.UnitTests.Mappers;
+namespace Checklist.UnitTests.MappersTests;
 
 public class UserMapperTests
 {

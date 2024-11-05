@@ -3,7 +3,7 @@ using Checklist_API.Features.Users.DTOs;
 using Checklist_API.Features.Users.Entity;
 using Checklist_API.Features.Users.Mappers;
 
-namespace Checklist.UnitTests.Mappers;
+namespace Checklist.UnitTests.MappersTests;
 public class UserRegistrationMapperTests
 {
     private readonly IMapper<User, UserRegistrationDTO> _userRegistrationMapper = new UserRegistrationMapper();

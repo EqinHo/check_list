@@ -55,17 +55,55 @@ public class AuthenticationServiceTests
     }
 
     [Fact]
+    public async Task AuthenticateUserAsync_WhenUserInvalidPassword_ShouldReturnNull()
+    {
+        // Arrange
+
+        var loginDTO = new LoginDTO { UserName = "ketilSveberg", Password = "string" };
+
+        var expextedUser = new User
+        {
+            Id = UserId.NewId,
+            FirstName = "Ketil",
+            LastName = "Sveberg",
+            Email = "ketilSveberg",
+            HashedPassword = "$2a$11$J/m/v5v3hOVLKREX7jMZNO1xkMbtzU3vHf3Tm0Swc2MTszc0IpxO22",
+            Salt = "$2a$11$55pfCgY8voiC1V4029QfR."
+        };
+
+        _userRepositoryMock.Setup(x => x.GetByEmailAsync(loginDTO.UserName)).ReturnsAsync(expextedUser);
+
+        // Act
+
+        var res = await _authenticationService.AuthenticateUserAsync(loginDTO);
+
+        // Assert
+
+        Assert.Null(res);
+
+        _userRepositoryMock.Verify(x => x.GetByEmailAsync(loginDTO.UserName), Times.Once);
+    }
+
+    [Fact]
     public async Task AuthenticateUserAsync_WhenUserNotValid_ShouldReturnNull()
     {
         // Arrange
 
+        var loginDTO = new LoginDTO { UserName = "ketilSveberg", Password = "string" };
 
+        User? nullUser = null;
+
+        _userRepositoryMock.Setup(x => x.GetByEmailAsync(loginDTO.UserName)).ReturnsAsync(nullUser);
 
         // Act
 
+        var res = await _authenticationService.AuthenticateUserAsync(loginDTO);
 
         // Assert
 
-    }
+        Assert.Null(res);
 
+        _userRepositoryMock.Verify(x => x.GetByEmailAsync(loginDTO.UserName), Times.Once);
+
+    }
 }

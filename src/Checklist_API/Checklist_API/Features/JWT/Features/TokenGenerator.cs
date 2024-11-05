@@ -22,10 +22,9 @@ public class TokenGenerator(IConfiguration config, IUserRoleRepository userRoleR
 
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-        List<Claim> claims = [];
         var userRoles = await _userRoleRepository.GetUserRolesAsync(user.Id);
 
+        List<Claim> claims = [];
         claims.Add(new Claim("UserId", user.Id.ToString()));
         claims.Add(new Claim("UserName", user.Email.ToString()));
 

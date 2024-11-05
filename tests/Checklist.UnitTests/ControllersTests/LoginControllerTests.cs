@@ -9,6 +9,8 @@ using Checklist_API.Features.Users.Entity;
 using BCrypt.Net;
 using Checklist_API.Features.JWT.Features.Interfaces; // For mocking
 
+namespace Checklist.UnitTests.ControllersTests;
+
 public class LoginControllerTests
 {
     private readonly LoginController _loginController;
