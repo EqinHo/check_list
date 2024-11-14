@@ -1,6 +1,7 @@
 using Checklist_API.Features.Users.Controller;
 using Checklist_API.Features.Users.DTOs;
 using Checklist_API.Features.Users.Service.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -23,7 +24,7 @@ public class UserControllerTests
     [InlineData(1, 10)]
     [InlineData(1, 5)]
 
-    public async Task GetAllUsersAsync_ShouldReturn_AllUsers_WithPagingValues(int page, int pageSize)
+    public async Task GetAllUsersAsync_ShouldReturnAllUsers_WithPagingValues(int page, int pageSize)
     {
         // arrange
 
@@ -119,7 +120,7 @@ public class UserControllerTests
     [Theory]
     [MemberData(nameof(GetUserRegistrationDTOsWithExpectedResults))] // kunne brukt ClassDtaa or InlineData for p ikke ha warning, lar være her pga DTOs er serializable
 
-    public async Task RegisterUserAsync_ShouldReturnOK_AndUserDTO(UserRegistrationDTO dto, UserDTO expectedUserDTO)
+    public async Task RegisterUserAsync_WhenOK_ShouldReturnUserDTO(UserRegistrationDTO dto, UserDTO expectedUserDTO)
     {
         // Arrange
         _userServiceMock.Setup(x => x.RegisterUserAsync(dto)).ReturnsAsync(expectedUserDTO);
@@ -129,8 +130,8 @@ public class UserControllerTests
 
         // Assert
         var actionResult = Assert.IsType<ActionResult<UserDTO>>(result);
-        var returnValue = Assert.IsType<OkObjectResult>(actionResult.Result);
-        var returnedDTO = Assert.IsType<UserDTO>(returnValue.Value);
+        var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+        var returnedDTO = Assert.IsType<UserDTO>(okResult.Value);
 
         Assert.Equal(expectedUserDTO, returnedDTO);
     }
@@ -185,14 +186,6 @@ public class UserControllerTests
         var returnedDTO = Assert.IsType<UserDTO>(returnValue.Value);
         Assert.Equal(expectedUserDTO, returnedDTO);
 
-        // disse trengs ikke da vi samenlikner hele objectet her:Assert.Equal(expectedUserDTO, returnedDTO); Velg hvilken man vil bruke:
-
-        //Assert.Equal(expectedUserDTO.FirstName, returnedDTO.FirstName);
-        //Assert.Equal(expectedUserDTO.LastName, returnedDTO.LastName);
-        //Assert.Equal(expectedUserDTO.PhoneNumber, returnedDTO.PhoneNumber);
-        //Assert.Equal(expectedUserDTO.Email, returnedDTO.Email);
-        //Assert.Equal(expectedUserDTO.DateCreated, returnedDTO.DateCreated);  
-        //Assert.Equal(expectedUserDTO.DateUpdated, returnedDTO.DateUpdated); 
     }
     #endregion using TheoryData V2
 
@@ -247,4 +240,23 @@ public class UserControllerTests
     #endregion using ClassData V4
 
     #endregion RegisterUserTests
+
+    [Fact]
+    public async Task RegisterUserAsync_WhenUserRegistrationFails_ShouldReturnBadRequest400()
+    {
+        //Arrange
+        UserRegistrationDTO dto = new("Nico", "Ho", "42534253", "Nico@gmail.com", "password3");
+
+        _userServiceMock.Setup(x => x.RegisterUserAsync(dto)).ReturnsAsync((UserDTO?)null);
+
+        //Act
+        var res = await _userController.RegisterUser(dto);
+
+        // Assert
+        var actionResult = Assert.IsType<ActionResult<UserDTO>>(res);
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
+        Assert.Equal(StatusCodes.Status400BadRequest, badRequestResult.StatusCode);
+
+        _userServiceMock.Verify(x => x.RegisterUserAsync(dto), Times.Once);
+    }
 }
