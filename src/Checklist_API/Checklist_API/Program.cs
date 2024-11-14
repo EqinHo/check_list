@@ -53,7 +53,7 @@ builder.Services.AddDbContext<CheckListDbContext>(options =>
     );
 
 builder.Services.AddScoped<GlobalExceptionMiddleware>(); // samle senere: public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration)
-builder.Services.AddSingleton<ExceptionHandler>();
+builder.Services.AddScoped<ExceptionHandler>();
 builder.Services.AddScoped<IUserAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
