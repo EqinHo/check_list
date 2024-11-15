@@ -39,12 +39,17 @@ public class UserController : ControllerBase
         return res != null ? Ok(res) : NotFound("Could not find any users");
     }
 
-    // GET api/<UserController>/5 
-    [HttpGet("{id}")]
-    public string Get(int id)
+    // GET https://localhost:7070/api/v1/users
+    [HttpGet("{id}", Name = "GetUserById")]
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserById([FromRoute] Guid id)
     {
-        return "value";
+        _logger.LogInformation ("Retrieving User by Id:{id}", id);
+
+        var res = await _userService.GetByIdAsync(id);
+
+        return res != null ? Ok(res): NotFound($"No user with Id {id} was found");
     }
+
     // PUT api/<UserController>/5
     [HttpPut("{id}")]
     public void Put(int id, [FromBody] string value)
