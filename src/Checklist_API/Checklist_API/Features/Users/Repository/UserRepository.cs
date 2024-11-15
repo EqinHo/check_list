@@ -20,12 +20,12 @@ public class UserRepository : IUserRepository
 
     public async Task<IEnumerable<User>> GetAllAsync(int page, int pageSize)
     {
-        _logger.LogDebug("Retrieving users from db");
+        _logger.LogInformation("Retrieving users from db");
 
         int itemToSkip = (page - 1) * pageSize;
 
         return await _dbContext.User
-            .OrderBy(x => x.Id)
+            .OrderBy(x => x.LastName)
             .Skip(itemToSkip)
             .Take(pageSize)
             .Distinct()
@@ -33,9 +33,11 @@ public class UserRepository : IUserRepository
             .ToListAsync();
     }
 
-    public Task<User?> GetByIdAsync(UserId id)
+    public async Task<User?> GetByIdAsync(UserId id)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation("Retrieving user by Id : {id}", id);
+
+        return await _dbContext.User.FirstOrDefaultAsync(x=> x.Id == id);
     }
 
     public Task<User?> UpdateAsync(UserId id, User user)

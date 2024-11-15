@@ -35,9 +35,20 @@ public class UserService : IUserService
         return dtos;
     }
 
-    public Task<UserDTO?> GetByIdAsync(Guid UserId)
+    public async Task<UserDTO?> GetByIdAsync(Guid userId)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation("Retrieving user by ID : {id}", userId);
+
+        var user = await _userRepository.GetByIdAsync(new UserId(userId));
+        if (user == null)
+        {
+            _logger.LogWarning($"User with ID: {userId} not found.");
+            return null;
+        }
+
+        // Bruk en mapper for transformasjon
+        var userDto = _userMapper.MapToDTO(user);
+        return userDto;
     }
 
     public Task<UserDTO?> UpdateAsync(Guid id, UserDTO dto)
