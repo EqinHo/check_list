@@ -8,11 +8,11 @@ namespace Checklist_API.Features.Users.Repository.Interfaces;
 
 public interface IUserRepository
 {
-    Task<IEnumerable<User>> GetAllAsync(int page, int pageSize);
-    Task<User?> GetByIdAsync(UserId id);
-    Task<User?> GetByEmailAsync(string email);
-    Task<User?> UpdateAsync(UserId id, User user);
-    Task<User?> DeleteAsync(UserId id);
-    Task<User?> RegisterAsync(User user);
+    Task<IEnumerable<User>> GetAllUsersAsync(int page, int pageSize);
+    Task<User?> GetUserByIdAsync(UserId id);
+    Task<User?> GetUserByEmailAsync(string email);
+    Task<User?> UpdateUserAsync(UserId id, User user);
+    Task<User?> DeleteUserAsync(UserId id);
+    Task<User?> RegisterUserAsync(User user);
 
 }

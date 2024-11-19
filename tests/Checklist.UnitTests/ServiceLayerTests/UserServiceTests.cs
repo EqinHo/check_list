@@ -81,9 +81,9 @@ public class UserServiceTests
         int page = 1;
         int pageSize = 10;
 
-        _userRepositoryMock.Setup(x => x.GetAllAsync(page, pageSize)).ReturnsAsync(users);
+        _userRepositoryMock.Setup(x => x.GetAllUsersAsync(page, pageSize)).ReturnsAsync(users);
 
-        var res = await _userService.GetAllAsync(page, pageSize);
+        var res = await _userService.GetAllUsersAsync(page, pageSize);
 
         Assert.NotNull(res);
         Assert.IsAssignableFrom<IEnumerable<UserDTO>>(res);
@@ -99,10 +99,10 @@ public class UserServiceTests
         int page = 1;
         int pageSize = 10;
 
-        _userRepositoryMock.Setup(x => x.GetAllAsync(page, pageSize)).ReturnsAsync(users);
+        _userRepositoryMock.Setup(x => x.GetAllUsersAsync(page, pageSize)).ReturnsAsync(users);
         // Act
 
-        var res = await _userService.GetAllAsync(page,pageSize);
+        var res = await _userService.GetAllUsersAsync(page,pageSize);
         // Assert
 
         Assert.NotNull(res);
@@ -129,8 +129,8 @@ public class UserServiceTests
             DateUpdated = new DateTime(2024, 12, 17, 02, 52, 30)
         };
 
-        _userRepositoryMock.Setup(x => x.GetByEmailAsync(dto.Email)).ReturnsAsync((User?)null);
-        _userRepositoryMock.Setup(x => x.RegisterAsync(It.IsAny<User>())).ReturnsAsync(user);
+        _userRepositoryMock.Setup(x => x.GetUserByEmailAsync(dto.Email)).ReturnsAsync((User?)null);
+        _userRepositoryMock.Setup(x => x.RegisterUserAsync(It.IsAny<User>())).ReturnsAsync(user);
 
         // Act
         var res = await _userService.RegisterUserAsync(dto);
@@ -146,8 +146,8 @@ public class UserServiceTests
         Assert.Equal(user.DateCreated, res.DateCreated);
         Assert.Equal(user.DateUpdated, res.DateUpdated);
 
-        _userRepositoryMock.Verify(x => x.GetByEmailAsync(dto.Email), Times.Once);
-        _userRepositoryMock.Verify(x => x.RegisterAsync(It.IsAny<User>()), Times.Once);
+        _userRepositoryMock.Verify(x => x.GetUserByEmailAsync(dto.Email), Times.Once);
+        _userRepositoryMock.Verify(x => x.RegisterUserAsync(It.IsAny<User>()), Times.Once);
     }
 
     [Fact]
@@ -169,7 +169,7 @@ public class UserServiceTests
             DateUpdated = new DateTime(2024, 12, 17, 02, 52, 30)
         };
 
-        _userRepositoryMock.Setup(x => x.GetByEmailAsync(dto.Email)).ReturnsAsync(user);
+        _userRepositoryMock.Setup(x => x.GetUserByEmailAsync(dto.Email)).ReturnsAsync(user);
 
         // Act & Assert
         await Assert.ThrowsAsync<UserAlreadyExistsException>(() => _userService.RegisterUserAsync(dto));

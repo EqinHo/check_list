@@ -35,7 +35,7 @@ public class UserControllerTests
             new UserDTO("Nico", "Ho", "12345678", "nico@gmail.com", new DateTime(2024, 10, 19, 02, 52, 00), new DateTime(2024, 10, 17, 12, 00, 45))
         };
 
-        _userServiceMock.Setup(x => x.GetAllAsync(page, pageSize)).ReturnsAsync(dtos);
+        _userServiceMock.Setup(x => x.GetAllUsersAsync(page, pageSize)).ReturnsAsync(dtos);
 
         // Act
 
@@ -70,7 +70,7 @@ public class UserControllerTests
     {
         // arrange
 
-        _userServiceMock.Setup(x => x.GetAllAsync(page, pageSize)).ReturnsAsync(() => null!);
+        _userServiceMock.Setup(x => x.GetAllUsersAsync(page, pageSize)).ReturnsAsync(() => null!);
 
         // Act
 
@@ -120,7 +120,7 @@ public class UserControllerTests
     [Theory]
     [MemberData(nameof(GetUserRegistrationDTOsWithExpectedResults))] // kunne brukt ClassDtaa or InlineData for p ikke ha warning, lar være her pga DTOs er serializable
 
-    public async Task RegisterUserAsync_WhenOK_ShouldReturnUserDTO(UserRegistrationDTO dto, UserDTO expectedUserDTO)
+    public async Task RegisterUser_WhenOK_ShouldReturnUserDTO(UserRegistrationDTO dto, UserDTO expectedUserDTO)
     {
         // Arrange
         _userServiceMock.Setup(x => x.RegisterUserAsync(dto)).ReturnsAsync(expectedUserDTO);
@@ -159,7 +159,7 @@ public class UserControllerTests
     [Theory]
     [MemberData(nameof(GetUserRegistrationDTOs))] // warning i tilfelle ikke er serializable: ikke primitive datatyper i DTO.
  
-    public async Task RegisterUserAsync_ShouldReturnOK_AndUserDTOV2(UserRegistrationDTO dto)
+    public async Task RegisterUser_ShouldReturnOK_AndUserDTOV2(UserRegistrationDTO dto)
     {
         // arrange
 
@@ -196,7 +196,7 @@ public class UserControllerTests
     [InlineData("Quyen", "Ho", "42534253", "Quyen99@gmail.com", "password2")]
     [InlineData("Nico", "Ho", "42534253", "Nico@gmail.com", "password3")]
 
-    public async Task RegisterUserAsync_ShouldReturnOK_AndUserDTOV3(string firstName, string lastName, string phoneNumber, string email, string password)
+    public async Task RegisterUser_ShouldReturnOK_AndUserDTOV3(string firstName, string lastName, string phoneNumber, string email, string password)
     {
         // Arrange
 
@@ -239,10 +239,8 @@ public class UserControllerTests
 
     #endregion using ClassData V4
 
-    #endregion RegisterUserTests
-
     [Fact]
-    public async Task RegisterUserAsync_WhenUserRegistrationFails_ShouldReturnBadRequest400()
+    public async Task RegisterUser_WhenUserRegistrationFails_ShouldReturnBadRequest400()
     {
         //Arrange
         UserRegistrationDTO dto = new("Nico", "Ho", "42534253", "Nico@gmail.com", "password3");
@@ -259,4 +257,62 @@ public class UserControllerTests
 
         _userServiceMock.Verify(x => x.RegisterUserAsync(dto), Times.Once);
     }
+
+    #endregion RegisterUserTests
+
+    #region UserTests
+
+    [Fact]
+
+    public async Task GetUserById_WhenOk_ShouldReturnUser()
+    {
+        // Arrange
+
+        Guid RandomGuidId = Guid.NewGuid();   
+
+        UserDTO userDTO = new("Ketil", "Sveberg", "12345678", "Sveberg@.gmail.com", new DateTime(2024, 10, 17, 02, 50, 00), new DateTime(2024, 10, 17, 02, 52, 30));
+
+        _userServiceMock.Setup(x=>x.GetUserByIdAsync(RandomGuidId)).ReturnsAsync(userDTO);
+
+        // Act
+
+        var res = await _userController.GetUserById(RandomGuidId);
+
+        // Assert
+
+        var actionResult = Assert.IsType<ActionResult<UserDTO>>(res);  // det vi får tilbake (ActionResult<DTO>)
+        var returnValue = Assert.IsType<OkObjectResult>(actionResult.Result);// sjekker om OKresult  er ok
+        var dto = Assert.IsType<UserDTO>(returnValue.Value);
+
+        Assert.Equal(dto.FirstName, userDTO.FirstName);
+        Assert.Equal(dto.LastName, userDTO.LastName);
+        Assert.Equal(dto.PhoneNumber, userDTO.PhoneNumber);
+        Assert.Equal(dto.Email, userDTO.Email);
+        Assert.Equal(dto.DateCreated, userDTO.DateCreated);
+        Assert.Equal(dto.DateUpdated, userDTO.DateUpdated);
+    }
+
+    [Fact]
+
+    public async Task GetUserById_WhenUserNotExist_ShouldReturnNotFound()
+    {
+        // Arrange
+
+        Guid RandomGuidId = Guid.NewGuid();
+
+        _userServiceMock.Setup(x => x.GetUserByIdAsync(RandomGuidId)).ReturnsAsync((UserDTO?)null);
+        
+        // Act
+
+        var res = await _userController.GetUserById(RandomGuidId);
+
+        // Assert
+
+        var actionResult = Assert.IsType<ActionResult<UserDTO>>(res);
+        var returnValue = Assert.IsType<NotFoundObjectResult>(actionResult.Result);
+        Assert.Equal($"No user with Id {RandomGuidId} was found", returnValue.Value ); 
+    }
+
+    #endregion
+
 }
