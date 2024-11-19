@@ -25,21 +25,21 @@ public class UserService : IUserService
         _userRegistrationMapper = userRegistrationMapper;
     }
 
-    public async Task<IEnumerable<UserDTO>> GetAllAsync(int page, int pageSize)
+    public async Task<IEnumerable<UserDTO>> GetAllUsersAsync(int page, int pageSize)
     {
         _logger.LogInformation("Retrieving all users");
 
-        var res = await _userRepository.GetAllAsync(page, pageSize);
+        var res = await _userRepository.GetAllUsersAsync(page, pageSize);
 
         var dtos = res.Select(user => _userMapper.MapToDTO(user)).ToList();
         return dtos;
     }
 
-    public async Task<UserDTO?> GetByIdAsync(Guid userId)
+    public async Task<UserDTO?> GetUserByIdAsync(Guid userId)
     {
         _logger.LogInformation("Retrieving user by ID : {id}", userId);
 
-        var user = await _userRepository.GetByIdAsync(new UserId(userId));
+        var user = await _userRepository.GetUserByIdAsync(new UserId(userId));
         if (user == null)
         {
             _logger.LogWarning($"User with ID: {userId} not found.");
@@ -51,12 +51,12 @@ public class UserService : IUserService
         return userDto;
     }
 
-    public Task<UserDTO?> UpdateAsync(Guid id, UserDTO dto)
+    public Task<UserDTO?> UpdateUserAsync(Guid id, UserDTO dto)
     {
         throw new NotImplementedException();
     }
 
-    public Task<UserDTO?> DeleteAsync(Guid id)
+    public Task<UserDTO?> DeleteUserAsync(Guid id)
     {
         throw new NotImplementedException();
     }
@@ -65,7 +65,7 @@ public class UserService : IUserService
     {
         _logger.LogDebug("Registering new user: {email}", dto.Email);
 
-        var existingUser = await _userRepository.GetByEmailAsync(dto.Email);
+        var existingUser = await _userRepository.GetUserByEmailAsync(dto.Email);
         if (existingUser != null)
         {
             _logger.LogDebug("User already exist: {Email}", dto.Email);
@@ -79,7 +79,7 @@ public class UserService : IUserService
         user.Salt = BCrypt.Net.BCrypt.GenerateSalt();
         user.HashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
-        var res = await _userRepository.RegisterAsync(user);
+        var res = await _userRepository.RegisterUserAsync(user);
 
         return res != null ? _userMapper.MapToDTO(res) : null;
     }

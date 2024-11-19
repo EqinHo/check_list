@@ -34,18 +34,18 @@ public class UserController : ControllerBase
             return BadRequest("Invalid pagination parameters - MIN page = 1, MAX pageSize = 50 ");
         }
 
-        var res = await _userService.GetAllAsync(page, pageSize);
+        var res = await _userService.GetAllUsersAsync(page, pageSize);
 
         return res != null ? Ok(res) : NotFound("Could not find any users");
     }
 
     // GET https://localhost:7070/api/v1/users
     [HttpGet("{id}", Name = "GetUserById")]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserById([FromRoute] Guid id)
+    public async Task<ActionResult<UserDTO>> GetUserById([FromRoute] Guid id)
     {
         _logger.LogInformation ("Retrieving User by Id:{id}", id);
 
-        var res = await _userService.GetByIdAsync(id);
+        var res = await _userService.GetUserByIdAsync(id);
 
         return res != null ? Ok(res): NotFound($"No user with Id {id} was found");
     }

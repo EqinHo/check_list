@@ -39,7 +39,7 @@ public class AuthenticationServiceTests
 
         };
 
-        _userRepositoryMock.Setup(u => u.GetByEmailAsync(loginDTO.UserName)).ReturnsAsync(expectedUser);
+        _userRepositoryMock.Setup(u => u.GetUserByEmailAsync(loginDTO.UserName)).ReturnsAsync(expectedUser);
 
         // Act
         var result = await _authenticationService.AuthenticateUserAsync(loginDTO);
@@ -51,7 +51,7 @@ public class AuthenticationServiceTests
         Assert.Equal(expectedUser.LastName, result.LastName);
         Assert.Equal(expectedUser.Email, result.Email);
 
-        _userRepositoryMock.Verify(v => v.GetByEmailAsync(loginDTO.UserName), Times.Once());    
+        _userRepositoryMock.Verify(v => v.GetUserByEmailAsync(loginDTO.UserName), Times.Once());    
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public class AuthenticationServiceTests
             Salt = "$2a$11$55pfCgY8voiC1V4029QfR."
         };
 
-        _userRepositoryMock.Setup(x => x.GetByEmailAsync(loginDTO.UserName)).ReturnsAsync(expextedUser);
+        _userRepositoryMock.Setup(x => x.GetUserByEmailAsync(loginDTO.UserName)).ReturnsAsync(expextedUser);
 
         // Act
 
@@ -81,7 +81,7 @@ public class AuthenticationServiceTests
 
         Assert.Null(res);
 
-        _userRepositoryMock.Verify(x => x.GetByEmailAsync(loginDTO.UserName), Times.Once);
+        _userRepositoryMock.Verify(x => x.GetUserByEmailAsync(loginDTO.UserName), Times.Once);
     }
 
     [Fact]
@@ -93,7 +93,7 @@ public class AuthenticationServiceTests
 
         User? nullUser = null;
 
-        _userRepositoryMock.Setup(x => x.GetByEmailAsync(loginDTO.UserName)).ReturnsAsync(nullUser);
+        _userRepositoryMock.Setup(x => x.GetUserByEmailAsync(loginDTO.UserName)).ReturnsAsync(nullUser);
 
         // Act
 
@@ -103,7 +103,7 @@ public class AuthenticationServiceTests
 
         Assert.Null(res);
 
-        _userRepositoryMock.Verify(x => x.GetByEmailAsync(loginDTO.UserName), Times.Once);
+        _userRepositoryMock.Verify(x => x.GetUserByEmailAsync(loginDTO.UserName), Times.Once);
 
     }
 }
