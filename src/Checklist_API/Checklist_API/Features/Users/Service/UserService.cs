@@ -14,14 +14,16 @@ public class UserService : IUserService
     private readonly IUserRepository _userRepository;
     private readonly ILogger<UserService> _logger;
     private readonly IMapper<User, UserDTO> _userMapper;
+    private readonly IMapper<User, UserUpdateDTO> _userUpdateMapper;
     private readonly IMapper<User, UserRegistrationDTO> _userRegistrationMapper;
 
-    public UserService(IUserRepository userRepository, ILogger<UserService> logger, IMapper<User, UserDTO> userMapper,
+    public UserService(IUserRepository userRepository, ILogger<UserService> logger, IMapper<User, UserDTO> userMapper, IMapper<User, UserUpdateDTO> userUpdateMapper,
                         IMapper<User, UserRegistrationDTO> userRegistrationMapper)
     {
         _userRepository = userRepository;
         _logger = logger;
         _userMapper = userMapper;
+        _userUpdateMapper = userUpdateMapper;
         _userRegistrationMapper = userRegistrationMapper;
     }
 
@@ -51,10 +53,23 @@ public class UserService : IUserService
         return userDto;
     }
 
-    public Task<UserDTO?> UpdateUserAsync(Guid id, UserDTO dto)
-    {
-        throw new NotImplementedException();
-    }
+    //public async Task<UserDTO?> UpdateUserAsync(Guid id, UserUpdateDTO dto)
+    //{
+    //    _logger.LogInformation("Update user With Id : {id}", id);
+
+    //    var user = _userUpdateMapper.MapToEntity(dto);
+    //    var res = await _userRepository.UpdateUserAsync(new UserId(id), user);
+
+    //    if (res == null)
+    //    {
+    //        _logger.LogWarning($"User with ID: {id} not found.");
+    //        return null;
+    //    }
+
+    //    var userDTO =
+
+    //    return res;
+    //}
 
     public Task<UserDTO?> DeleteUserAsync(Guid id)
     {
@@ -82,5 +97,10 @@ public class UserService : IUserService
         var res = await _userRepository.RegisterUserAsync(user);
 
         return res != null ? _userMapper.MapToDTO(res) : null;
+    }
+
+    public Task<UserDTO?> UpdateUserAsync(Guid id, UserUpdateDTO dto)
+    {
+        throw new NotImplementedException();
     }
 }

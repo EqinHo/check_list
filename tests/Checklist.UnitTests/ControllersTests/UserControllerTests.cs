@@ -290,6 +290,8 @@ public class UserControllerTests
         Assert.Equal(dto.Email, userDTO.Email);
         Assert.Equal(dto.DateCreated, userDTO.DateCreated);
         Assert.Equal(dto.DateUpdated, userDTO.DateUpdated);
+
+        _userServiceMock.Verify(x => x.GetUserByIdAsync(RandomGuidId), Times.Once);
     }
 
     [Fact]
@@ -310,7 +312,9 @@ public class UserControllerTests
 
         var actionResult = Assert.IsType<ActionResult<UserDTO>>(res);
         var returnValue = Assert.IsType<NotFoundObjectResult>(actionResult.Result);
-        Assert.Equal($"No user with Id {RandomGuidId} was found", returnValue.Value ); 
+        Assert.Equal($"No user with Id {RandomGuidId} was found", returnValue.Value );
+
+        _userServiceMock.Verify(x => x.GetUserByIdAsync(RandomGuidId), Times.Once);
     }
 
     #endregion

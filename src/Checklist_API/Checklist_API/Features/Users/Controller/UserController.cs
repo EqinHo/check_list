@@ -50,17 +50,21 @@ public class UserController : ControllerBase
         return res != null ? Ok(res): NotFound($"No user with Id {id} was found");
     }
 
-    // PUT api/<UserController>/5
+    // PUT https://localhost:7070/api/v1/users/
     [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    public async Task<ActionResult<UserDTO>> UpdateUser(Guid id, [FromBody] UserUpdateDTO dto)
     {
-        // var userId = User.FindFirst("UserId")?.Value // bruker for å sjekke at en bruker kun kan endre sin egen checklist
+        _logger.LogInformation("Updated user with UserID : {id} ", id);
+
+        var res = await _userService.UpdateUserAsync(id, dto);
+        return res != null ? Ok(res) : NotFound($"Could not Update User with Id {id}");
     }
 
     // DELETE api/<UserController>/5
-    [HttpDelete("{id}")]
+    [HttpDelete("{id}", Name = "UpdateUserId")]
     public void Delete(int id)
     {
+
     }
 
     // POST https://localhost:7070/api/v1/users/register
