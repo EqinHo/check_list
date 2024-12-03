@@ -1,19 +1,11 @@
-﻿using Castle.Core.Logging;
-using Checklist_API.Features.Common.Interfaces;
-using Checklist_API.Features.Users.Controller;
+﻿using Checklist_API.Features.Common.Interfaces;
 using Checklist_API.Features.Users.DTOs;
 using Checklist_API.Features.Users.Entity;
 using Checklist_API.Features.Users.Mappers;
 using Checklist_API.Features.Users.Repository.Interfaces;
 using Checklist_API.Features.Users.Service;
-using Checklist_API.Features.Users.Service.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static Checklist_API.Extensions.CustomExceptions;
 
 namespace Checklist.UnitTests.ServiceLayerTests;
@@ -21,23 +13,25 @@ public class UserServiceTests
 {
     private readonly UserService _userService;
     private readonly IMapper<User, UserDTO> _userMapper;
-    private readonly Mock<IUserRepository> _userRepositoryMock = new ();
-    private readonly Mock<ILogger<UserService>> _loggerMock = new ();
-    private readonly IMapper<User, UserRegistrationDTO> _userRegistrationMapper ;
+    private readonly Mock<IUserRepository> _userRepositoryMock = new();
+    private readonly Mock<ILogger<UserService>> _loggerMock = new();
+    private readonly IMapper<User, UserUpdateDTO> _userUpdateMapper;
+    private readonly IMapper<User, UserRegistrationDTO> _userRegistrationMapper;
 
     public UserServiceTests()
     {
         _userMapper = new UserMapper();
+        _userUpdateMapper = new UserUpdateMapper();
         _userRegistrationMapper = new UserRegistrationMapper();
-        _userService = new UserService(_userRepositoryMock.Object, _loggerMock.Object, _userMapper, _userRegistrationMapper);
+        _userService = new UserService(_userRepositoryMock.Object, _loggerMock.Object, _userMapper, _userUpdateMapper, _userRegistrationMapper);
     }
 
     [Fact]
     public async Task GetAllAsync_WhenRetrievingAllUsers_ShouldReturnAllUsers()
     {
-            IEnumerable<User> users =
-        [
-                new User
+        IEnumerable<User> users =
+    [
+            new User
                 {
                 Id = UserId.NewId,
                 FirstName = "Ketil",
@@ -102,12 +96,12 @@ public class UserServiceTests
         _userRepositoryMock.Setup(x => x.GetAllUsersAsync(page, pageSize)).ReturnsAsync(users);
         // Act
 
-        var res = await _userService.GetAllUsersAsync(page,pageSize);
+        var res = await _userService.GetAllUsersAsync(page, pageSize);
         // Assert
 
         Assert.NotNull(res);
         Assert.IsAssignableFrom<IEnumerable<UserDTO>>(res);
-        Assert.Empty(res);   
+        Assert.Empty(res);
     }
 
     [Fact]
@@ -173,6 +167,75 @@ public class UserServiceTests
 
         // Act & Assert
         await Assert.ThrowsAsync<UserAlreadyExistsException>(() => _userService.RegisterUserAsync(dto));
+    }
+
+    [Fact]
+    public async Task GetUserByIdAsync_WhenOk_ShouldReturnUserDTO()
+    {
+        // Arrange
+
+        User user = new()
+        {
+            Id = UserId.NewId,
+            FirstName = "Nils",
+            LastName = "Jensen",
+            PhoneNumber = "83542435",
+            Email = "jensen@gmail.com",
+            HashedPassword = "hashedPassword",
+            Salt = "salt",
+            DateCreated = new DateTime(2024, 11, 17, 02, 50, 00),
+            DateUpdated = new DateTime(2024, 12, 17, 02, 52, 30)
+        };
+
+        _userRepositoryMock.Setup(x => x.GetUserByIdAsync(user.Id)).ReturnsAsync(user);
+        //_userMapper.MapToDTO(user);
+
+        // Act
+
+        var res = await _userService.GetUserByIdAsync(user.Id.userId);
+
+        // Assert
+        Assert.NotNull(res);
+        Assert.IsType<UserDTO>(res);
+        Assert.Equal(user.FirstName, res.FirstName);
+        Assert.Equal(user.LastName, res.LastName);
+        Assert.Equal(user.Email, res.Email);
+        Assert.Equal(user.DateCreated, res.DateCreated);
+        Assert.Equal(user.DateUpdated, res.DateUpdated);
+
+        _userRepositoryMock.Verify(x => x.GetUserByIdAsync(user.Id), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetUserByIdAsync_WhenUserDontExist_ShouldReturnNull()
+    {
+        // Arrange
+
+        User user = new()
+        {
+            Id = UserId.NewId,
+            FirstName = "Nils",
+            LastName = "Jensen",
+            PhoneNumber = "83542435",
+            Email = "jensen@gmail.com",
+            HashedPassword = "hashedPassword",
+            Salt = "salt",
+            DateCreated = new DateTime(2024, 11, 17, 02, 50, 00),
+            DateUpdated = new DateTime(2024, 12, 17, 02, 52, 30)
+        };
+
+        _userRepositoryMock.Setup(x => x.GetUserByIdAsync(user.Id)).ReturnsAsync((User?)null);
+
+        // Act
+
+        var res = await _userService.GetUserByIdAsync(user.Id.userId);
+
+
+        // Assert
+
+        Assert.Null(res);
+
+        _userRepositoryMock.Verify(x => x.GetUserByIdAsync(user.Id), Times.Once);
     }
 }
 
