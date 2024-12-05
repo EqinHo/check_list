@@ -40,14 +40,41 @@ public class UserRepository : IUserRepository
         return await _dbContext.User.FirstOrDefaultAsync(x=> x.Id == id);
     }
 
-    public Task<User?> UpdateUserAsync(UserId id, User user)
+    public async Task<User?> UpdateUserAsync(UserId id, User user)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation("Updating user with Id : {id}", id);
+
+        var usr = await _dbContext.User.FindAsync(id);
+        if (usr == null) 
+        { 
+            return null;
+        }
+
+        usr.FirstName = string.IsNullOrWhiteSpace(user.FirstName) ? user.FirstName : user.FirstName;
+        usr.LastName = string.IsNullOrWhiteSpace(user.LastName) ? user.LastName : user.LastName;
+        usr.Email = string.IsNullOrWhiteSpace(user.Email) ? user.Email : user.Email;
+        usr.PhoneNumber = string.IsNullOrWhiteSpace(user.PhoneNumber) ? user.PhoneNumber : user.PhoneNumber;
+        usr.DateUpdated = DateTime.Now;
+
+        await _dbContext.SaveChangesAsync();
+        return usr;
     }
 
-    public Task<User?> DeleteUserAsync(UserId id)
+    public async Task<User?> DeleteUserAsync(UserId id)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation("delete user with Id : {id}", id);
+
+        var user = await _dbContext.User.FindAsync(id);
+
+        if(user == null)
+        {
+            return null;
+        }
+
+        _dbContext.User.Remove(user);
+        await _dbContext.SaveChangesAsync();
+
+        return user;
     }
 
     public async Task<User?> RegisterUserAsync(User user)

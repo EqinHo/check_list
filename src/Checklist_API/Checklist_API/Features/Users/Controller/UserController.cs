@@ -51,20 +51,23 @@ public class UserController : ControllerBase
     }
 
     // PUT https://localhost:7070/api/v1/users/
-    [HttpPut("{id}")]
-    public async Task<ActionResult<UserDTO>> UpdateUser(Guid id, [FromBody] UserUpdateDTO dto)
+    [HttpPut("{id}", Name = "UpdateUserById")]
+    public async Task<ActionResult<UserDTO>> UpdateUserById(Guid id, [FromBody] UserUpdateDTO dto)
     {
-        _logger.LogInformation("Updated user with UserID : {id} ", id);
+        _logger.LogInformation("Updated user with User ID : {id} ", id);
 
         var res = await _userService.UpdateUserAsync(id, dto);
         return res != null ? Ok(res) : NotFound($"Could not Update User with Id {id}");
     }
 
-    // DELETE api/<UserController>/5
-    [HttpDelete("{id}", Name = "UpdateUserId")]
-    public void Delete(int id)
+    // DELETE https://localhost:7070/api/v1/users/
+    [HttpDelete("{id}", Name = "DeleteUserById")]
+    public async Task<ActionResult<UserDTO>> DeleteUserById(Guid id)
     {
+        _logger.LogInformation("Deleting User with User ID : {id}", id);
 
+        var res = await _userService.DeleteUserAsync(id);
+        return res != null ? Ok(res) : NotFound($"Could not Delete User with Id {id}");
     }
 
     // POST https://localhost:7070/api/v1/users/register
