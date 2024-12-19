@@ -27,12 +27,12 @@ public class UserServiceTests
     }
 
     [Fact]
-    public async Task GetAllAsync_WhenRetrievingAllUsers_ShouldReturnAllUsers()
+    public async Task GetAllUsersAsync_WhenRetrievingAllUsers_ShouldReturnAllUsers()
     {
         IEnumerable<User> users =
     [
             new User
-                {
+            {
                 Id = UserId.NewId,
                 FirstName = "Ketil",
                 LastName = "Sveberg",
@@ -42,10 +42,10 @@ public class UserServiceTests
                 Salt = "salt",
                 DateCreated = new DateTime(2024, 11, 17, 02, 50, 00),
                 DateUpdated = new DateTime(2024, 12, 17, 02, 52, 30)
-                },
+            },
 
-                new User
-                {
+            new User
+            {
                 Id = UserId.NewId,
                 FirstName = "Quyen",
                 LastName = "Ho",
@@ -55,10 +55,10 @@ public class UserServiceTests
                 Salt = "salt",
                 DateCreated = new DateTime(2024, 11, 17, 02, 50, 00),
                 DateUpdated = new DateTime(2024, 12, 17, 02, 52, 30)
-                },
+            },
 
-                new User
-                {
+            new User
+            {
                 Id = UserId.NewId,
                 FirstName = "Banan",
                 LastName = "Hoberg",
@@ -68,7 +68,7 @@ public class UserServiceTests
                 Salt = "salt",
                 DateCreated = new DateTime(2024, 11, 17, 02, 50, 00),
                 DateUpdated = new DateTime(2024, 12, 17, 02, 52, 30)
-                },
+            },
         ];
 
 
@@ -85,7 +85,7 @@ public class UserServiceTests
     }
 
     [Fact]
-    public async Task GetAllAsync_WhenThereAreNoUsers_ShouldReturnEmptyCollection()
+    public async Task GetAllUsersAsync_WhenThereAreNoUsers_ShouldReturnEmptyCollection()
     {
         // Arrange
         IEnumerable<User> users = [];

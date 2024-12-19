@@ -11,6 +11,7 @@ using Checklist_API.Features.Users.Service.Interfaces;
 using Checklist_API.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
@@ -78,6 +79,7 @@ app.UseHttpsRedirection();
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
+JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 app.UseAuthentication();
 app.UseAuthorization();
 
