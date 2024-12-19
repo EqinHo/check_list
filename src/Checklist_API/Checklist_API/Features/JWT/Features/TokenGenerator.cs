@@ -25,8 +25,8 @@ public class TokenGenerator(IConfiguration config, IUserRoleRepository userRoleR
         var userRoles = await _userRoleRepository.GetUserRolesAsync(user.Id);
 
         List<Claim> claims = [];
-        claims.Add(new Claim("UserId", user.Id.ToString()));
-        claims.Add(new Claim("UserName", user.Email.ToString()));
+        claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id.userId.ToString()));
+        claims.Add(new Claim(JwtRegisteredClaimNames.Name, user.Email.ToString()));
 
         foreach (var role in userRoles)
         {
